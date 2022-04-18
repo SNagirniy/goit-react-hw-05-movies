@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { TrendingFilms } from 'services/FetchFilms';
 import { MovieList } from 'components/MovieList/MovieList';
+import { useLocation } from 'react-router-dom';
 
 const HomePage = () => {
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const getFilms = async () => {
@@ -24,7 +26,7 @@ const HomePage = () => {
   return (
     <>
       {loading && <div>Loading...</div>}
-      <MovieList films={films} />
+      <MovieList films={films} location={location} />
     </>
   );
 };
