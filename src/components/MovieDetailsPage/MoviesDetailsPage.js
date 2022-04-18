@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
-import { nanoid } from 'nanoid';
 import { ViewFilm } from 'services/FetchFilms';
+import { DetailsView } from 'components/DetailsView/DetailsView';
 
 export const MoviesDetailsPage = () => {
   const { itemId } = useParams();
   const location = useLocation();
-  const [film, setFilm] = useState(null);
+  const [film, setFilm] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const getYear = date => {
@@ -21,6 +21,7 @@ export const MoviesDetailsPage = () => {
         setFilm(response.data);
       } catch (error) {
         console.log(error);
+        setFilm([]);
       } finally {
         setLoading(false);
       }
@@ -31,46 +32,34 @@ export const MoviesDetailsPage = () => {
   return (
     <>
       {loading && <div> Loading...</div>}
-
-      {film && (
-        <main>
-          <Link to={location?.state?.from ?? '/'}>Go back</Link>
-          <div>
-            <img
-              src={`https://image.tmdb.org/t/p/w300${film.poster_path}`}
-              alt={film.original_title}
-            />
-            <h1>
-              {film.title} ({getYear(film.release_date)})
-            </h1>
-            <p>User score: {film.vote_average}</p>
-            <h2>
-              Genres:
-              {film.genres.map(genre => {
-                const id = nanoid();
-                return <span key={id}>{genre.name} </span>;
-              })}
-            </h2>
-            <h2>Overview</h2>
-            <p>{film.overview}</p>
-          </div>
-          <div>
-            <Link
-              to={`/movies/${itemId}/cast`}
-              state={{ from: { ...location.state.from } }}
-            >
-              Cast
-            </Link>
-            <Link
-              to={`/movies/${itemId}/reviews`}
-              state={{ from: { ...location.state.from } }}
-            >
-              Reviews
-            </Link>
-            <Outlet />
-          </div>
-        </main>
-      )}
+      <main>
+        <Link to={location?.state?.from ?? '/'}>Go back</Link>
+        {film && (
+          <DetailsView
+            poster={film.poster_path}
+            title={film.original_title}
+            year={getYear(film.release_date)}
+            score={film.vote_average}
+            genres={film.genres}
+            overview={film.overview}
+          />
+        )}
+        <div>
+          <Link
+            to={`/movies/${itemId}/cast`}
+            state={{ from: { ...location.state.from } }}
+          >
+            Cast
+          </Link>
+          <Link
+            to={`/movies/${itemId}/reviews`}
+            state={{ from: { ...location.state.from } }}
+          >
+            Reviews
+          </Link>
+          <Outlet />
+        </div>
+      </main>
     </>
   );
 };

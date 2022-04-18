@@ -4,7 +4,7 @@ import { FilmReviews } from 'services/FetchFilms';
 
 export const Reviews = () => {
   const { itemId } = useParams();
-  const [reviews, setReviews] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,20 +33,21 @@ export const Reviews = () => {
 
       {reviews && (
         <div>
-          <ul></ul>
-          {reviews.map(
-            ({ author, id, content, updated_at, author_details }) => {
-              return (
-                <li key={id}>
-                  <h2>
-                    {author}({author_details.rating}/10)
-                  </h2>
-                  <p>{getDate(updated_at)}</p>
-                  <article>{content}</article>
-                </li>
-              );
-            }
-          )}
+          <ul>
+            {reviews.map(
+              ({ author, id, content, updated_at, author_details }) => {
+                return (
+                  <li key={id}>
+                    <h2>
+                      {author}({author_details.rating}/10)
+                    </h2>
+                    <p>{getDate(updated_at)}</p>
+                    <article>{content}</article>
+                  </li>
+                );
+              }
+            )}
+          </ul>
         </div>
       )}
     </>
