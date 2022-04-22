@@ -20,7 +20,6 @@ const MoviePage = () => {
     e.preventDefault();
     if (query === '') {
       setSearchParams('');
-      setFilms(null);
       return toast('Please, enter movie name!', {
         position: 'top-center',
       });
@@ -31,6 +30,7 @@ const MoviePage = () => {
 
   useEffect(() => {
     const keyWord = searchParams.get('query');
+    setFilms(null);
     if (location.search === '') {
       return;
     }
@@ -40,7 +40,7 @@ const MoviePage = () => {
         const response = await SearchFilm(keyWord);
         if (response.data.results.length === 0) {
           setFilms(null);
-          return toast(`Movie ${query} not found!`, {
+          return toast(`Movie ${keyWord} not found!`, {
             position: 'top-center',
           });
         }
