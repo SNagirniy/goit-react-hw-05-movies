@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
 import { ViewFilm } from 'services/FetchFilms';
 import { DetailsView } from 'components/DetailsView/DetailsView';
+import s from './MovieDetailsPage.module.css';
 
-export const MoviesDetailsPage = () => {
+const MoviesDetailsPage = () => {
   const { itemId } = useParams();
   const location = useLocation();
-  const [film, setFilm] = useState([]);
+  const [film, setFilm] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const getYear = date => {
@@ -18,10 +19,13 @@ export const MoviesDetailsPage = () => {
       setLoading(true);
       try {
         const response = await ViewFilm(itemId);
+        if (response.data.length === 0) {
+          return;
+        }
         setFilm(response.data);
       } catch (error) {
         console.log(error);
-        setFilm([]);
+        setFilm(null);
       } finally {
         setLoading(false);
       }
@@ -31,10 +35,12 @@ export const MoviesDetailsPage = () => {
 
   return (
     <>
-      {loading && <div> Loading...</div>}
-      <main>
-        <Link to={location?.state?.from ?? '/'}>Go back</Link>
-        {film && (
+      {loading && <div className={s.loading}> Loading...</div>}
+      <Link className={s.back_link} to={location?.state?.from ?? '/'}>
+        Go back
+      </Link>
+      <main className={s.main}>
+        {film ? (
           <DetailsView
             poster={film.poster_path}
             title={film.original_title}
@@ -43,15 +49,19 @@ export const MoviesDetailsPage = () => {
             genres={film.genres}
             overview={film.overview}
           />
+        ) : (
+          <p className={s.message}>Film not found</p>
         )}
-        <div>
+        <div className={s.detailsContainer}>
           <Link
+            className={s.details_link}
             to={`/movies/${itemId}/cast`}
             state={{ from: { ...location.state.from } }}
           >
             Cast
           </Link>
           <Link
+            className={s.details_link}
             to={`/movies/${itemId}/reviews`}
             state={{ from: { ...location.state.from } }}
           >
@@ -63,3 +73,5 @@ export const MoviesDetailsPage = () => {
     </>
   );
 };
+
+export default MoviesDetailsPage;

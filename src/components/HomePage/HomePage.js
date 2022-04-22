@@ -13,7 +13,10 @@ const HomePage = () => {
       setLoading(true);
       try {
         const response = await TrendingFilms();
-        setFilms(prevFilms => [...prevFilms, ...response.data.results]);
+        if (response.data.results.length === 0) {
+          return;
+        }
+        setFilms([...response.data.results]);
       } catch (error) {
         console.log(error);
       } finally {

@@ -1,0 +1,23 @@
+.item{
+    margin-bottom: 5px;
+   
+}
+
+
+
+.item_link{
+    display: block;
+    padding: 3px;
+    font-size: medium;
+    font-weight: 500;
+    text-decoration: none;
+    color:rgba(0, 0, 0, 0.658);
+    transition: transform 150ms ease-out;
+}
+
+.item_link:hover,
+.item_link:focus{
+    color: black;
+    transform: scale(1.05);
+   background-color: rgba(255, 228, 196, 0.219);
+}

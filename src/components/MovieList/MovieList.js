@@ -1,7 +1,10 @@
 import { MovieItem } from 'components/MovieItem/MovieItem';
+import PropTypes from 'prop-types';
+import s from './MovieList.module.css';
+
 export const MovieList = ({ films, location }) => {
   return (
-    <ul>
+    <ul className={s.list}>
       {films.map(({ id, title, name }) => {
         const movieTitle = title || name;
         return (
@@ -15,4 +18,9 @@ export const MovieList = ({ films, location }) => {
       })}
     </ul>
   );
+};
+
+MovieList.protoTypes = {
+  films: PropTypes.array.isRequired,
+  location: PropTypes.object.isRequired,
 };

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { SearchFilm } from 'services/FetchFilms';
 import { MovieList } from 'components/MovieList/MovieList';
+import { toast } from 'react-toastify';
+import s from './MoviePage.module.css';
 
 const MoviePage = () => {
   const [query, setQuery] = useState('');
@@ -16,6 +18,13 @@ const MoviePage = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (query === '') {
+      setSearchParams('');
+      setFilms(null);
+      return toast('Please, enter movie name!', {
+        position: 'top-center',
+      });
+    }
     setSearchParams({ query });
     setQuery('');
   };
@@ -30,8 +39,10 @@ const MoviePage = () => {
       try {
         const response = await SearchFilm(keyWord);
         if (response.data.results.length === 0) {
-          setFilms([]);
-          return;
+          setFilms(null);
+          return toast(`Movie ${query} not found!`, {
+            position: 'top-center',
+          });
         }
         setFilms(response.data.results);
       } catch (error) {
@@ -45,8 +56,9 @@ const MoviePage = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form className={s.form} onSubmit={handleSubmit}>
         <input
+          className={s.input}
           onChange={ChangeQuery}
           type="text"
           value={query}
@@ -54,9 +66,9 @@ const MoviePage = () => {
           autoFocus
           placeholder="Search films"
         ></input>
-        <button type="submit">Search</button>
+        <button className={s.button} type="submit"></button>
       </form>
-      {loading && <div>Loading...</div>}
+      {loading && <div className={s.loading}>Loading...</div>}
       {films && <MovieList films={films} location={location} />}
     </>
   );

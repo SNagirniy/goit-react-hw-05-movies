@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FilmCast } from 'services/FetchFilms';
-import No_poster from '../images/No_poster.png';
+import { CastItem } from 'components/CastItem/CastItem';
+import s from './Cast.module.css';
 
-export const Cast = () => {
+const Cast = () => {
   const { itemId } = useParams();
   const [cast, setCast] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,29 +26,19 @@ export const Cast = () => {
 
   return (
     <>
-      {loading && <div> Loading...</div>}
+      {loading && <div className={s.loading}> Loading...</div>}
 
       {cast.length > 0 ? (
-        <div>
-          {cast.map(({ name, profile_path, id }) => {
-            return (
-              <div key={id}>
-                {profile_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w300${profile_path}`}
-                    alt={name}
-                  />
-                ) : (
-                  <img src={No_poster} alt={'Poster not found'} />
-                )}
-                <h2>{name}</h2>
-              </div>
-            );
+        <ul className={s.cast}>
+          {cast.map(({ name, profile_path, cast_id }) => {
+            return <CastItem key={cast_id} path={profile_path} name={name} />;
           })}
-        </div>
+        </ul>
       ) : (
-        <p>We don`t have any cast for this movie.</p>
+        <p className={s.message}>We don`t have any cast for this movie.</p>
       )}
     </>
   );
 };
+
+export default Cast;

@@ -1,0 +1,32 @@
+
+.tumb {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.image {
+    width: 230px;
+}
+
+.title {
+    margin: 0;
+    padding: 0;
+}
+
+
+.genre {
+    margin-left: 10px;
+    font-weight: 400;
+    text-decoration: underline;
+}
+.score {
+    font-size: large;
+    font-weight: 400;
+}
+
+.text {
+    color:rgba(36, 17, 68, 0.637);
+    text-align: justify;
+
+}
