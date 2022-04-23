@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
+import { useParams, Link, Outlet, useNavigate } from 'react-router-dom';
 import { ViewFilm } from 'services/FetchFilms';
 import { DetailsView } from 'components/DetailsView/DetailsView';
 import s from './MovieDetailsPage.module.css';
 
 const MoviesDetailsPage = () => {
   const { itemId } = useParams();
-  const location = useLocation();
+  const navigate = useNavigate();
   const [film, setFilm] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const onBack = () => {
+    navigate(-1);
+  };
 
   const getYear = date => {
     return new Date(date).getFullYear();
@@ -36,9 +40,9 @@ const MoviesDetailsPage = () => {
   return (
     <>
       {loading && <div className={s.loading}> Loading...</div>}
-      <Link className={s.back_link} to={location?.state?.from ?? '/'}>
+      <button className={s.back_btn} onClick={onBack}>
         Go back
-      </Link>
+      </button>
       <main className={s.main}>
         {film ? (
           <DetailsView
@@ -53,18 +57,10 @@ const MoviesDetailsPage = () => {
           <p className={s.message}>Film not found</p>
         )}
         <div className={s.detailsContainer}>
-          <Link
-            className={s.details_link}
-            to={`/movies/${itemId}/cast`}
-            state={{ from: { ...location.state.from } }}
-          >
+          <Link className={s.details_link} to={`/movies/${itemId}/cast`}>
             Cast
           </Link>
-          <Link
-            className={s.details_link}
-            to={`/movies/${itemId}/reviews`}
-            state={{ from: { ...location.state.from } }}
-          >
+          <Link className={s.details_link} to={`/movies/${itemId}/reviews`}>
             Reviews
           </Link>
           <Outlet />

@@ -69,7 +69,7 @@ const MoviePage = () => {
         <button className={s.button} type="submit"></button>
       </form>
       {loading && <div className={s.loading}>Loading...</div>}
-      {films && <MovieList films={films} location={location} />}
+      {films && <MovieList films={films} />}
     </>
   );
 };
